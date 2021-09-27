@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('./member.controller');
+const ctr = require('./member.controller');
 
 /* GET users listing. */
-router.get('/', controller.users);
-router.get('/list', controller.list);
+router.get('/', ctr.users);
+router.get('/login', ctr.login);
+router.get('/list', ctr.check, ctr.list);
 
 module.exports = router;
