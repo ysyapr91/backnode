@@ -1,35 +1,32 @@
 exports.users = (req, res, next) => {
-    //res.send('respond with a resource');
     exports.check(req, res, next);
 }
 
 exports.check = (req, res, next) => {
-    console.log('checking' + req.url);
+    console.log('checking : ' + req.url);
     next();
 }
 
 exports.list = (req, res, next) => {
-    var sql = 'select * from yoon.member';
-    try {
-        conn.query(sql, function (err, rows, fields) {
-            if(err) console.log('query is not excuted. select fail....\n' + err);
-            else res.render('list.ejs', {list : rows});
-            console.log(rows);
+    var sql = 'select * from member';    
+        global.dbPool.select(sql, function(err, data){
+            if (err) console.log(err);
+            else res.send(data);
         });
-    } catch {
-        console.log(req.url + ' err');
-        res.json({ error: 'error'});
-    }
+        /*
+        global.dbPool.getConnection(function(err, con){
+            con.query(sql, function (err, result, fields) {
+                con.release();
+                if (err) return callback(err);
+                res.send(result);
+            });
+        });
+        */
 }
 
 exports.login = (req, res, next) => {
-    var sql = 'select * from yoon.member';    
     try {
-        conn.query(sql, function (err, rows, fields) {
-            if(err) console.log('query is not excuted. select fail....\n' + err);
-            else res.render('list.ejs', {list : rows});
-            console.log(rows);
-        });
+        console.log('login : ' + req.url);
     } catch {
         console.log(req.url + ' err');
         res.json({ error: 'error'});
