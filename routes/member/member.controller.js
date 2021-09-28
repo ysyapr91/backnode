@@ -1,27 +1,10 @@
-exports.users = (req, res, next) => {
+exports.main = (req, res, next) => {
     exports.check(req, res, next);
 }
 
 exports.check = (req, res, next) => {
     console.log('checking : ' + req.url);
     next();
-}
-
-exports.list = (req, res, next) => {
-    var sql = 'select * from member';    
-        global.dbPool.select(sql, function(err, data){
-            if (err) console.log(err);
-            else res.send(data);
-        });
-        /*
-        global.dbPool.getConnection(function(err, con){
-            con.query(sql, function (err, result, fields) {
-                con.release();
-                if (err) return callback(err);
-                res.send(result);
-            });
-        });
-        */
 }
 
 exports.login = (req, res, next) => {
@@ -31,4 +14,24 @@ exports.login = (req, res, next) => {
         console.log(req.url + ' err');
         res.json({ error: 'error'});
     }
+}
+
+exports.register = (req, res, next) => {
+    var memberObj = {
+        id : req.query.id,
+        password : req.query.password
+    };
+    var sql = "INSERT INTO member SET seq = (select nextval('member')), ?";
+    global.dbPool.queryParam(sql, memberObj, function(err, data){
+        if (err) console.log(err);
+        else res.send(data);
+    });
+}
+
+exports.list = (req, res, next) => {
+    var sql = 'SELECT * FROM member';    
+    global.dbPool.query(sql, function(err, data){
+        if (err) console.log(err);
+        else res.send(data);
+    });
 }

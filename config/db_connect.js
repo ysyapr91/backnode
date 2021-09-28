@@ -15,9 +15,18 @@ module.exports = function () {
         getConnection: function (callback) {
             pool.getConnection(callback);
         },
-        select: function (sql, callback){
+        query: function (sql, callback){
             pool.getConnection(function(err, con){
                 con.query(sql, function (err, result, fields) {
+                    con.release();
+                    if (err) return callback(err);
+                    callback(null, result);
+                });
+             });
+        },
+        queryParam: function (sql, param, callback){
+            pool.getConnection(function(err, con){
+                con.query(sql, param, function (err, result, fields) {
                     con.release();
                     if (err) return callback(err);
                     callback(null, result);
