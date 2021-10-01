@@ -1,1 +1,2 @@
 config/database.js
+config/db_config.js

@@ -24,17 +24,16 @@ exports.check = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     var memberObj = [req.query.id, req.query.password];
-    var sql = "SELECT COUNT(*) as cnt FROM member WHERE id=? AND password=?";
+    var sql = "SELECT seq,id FROM member WHERE id=? AND password=?";
     global.dbPool.queryParam(sql, memberObj, function(err, data){
         if (err) {
             console.log(err);
             res.send({msg:'login fail'});
-        }
-        else {
-            console.log(data);
-            if(data[0].cnt > 0){
+        } else {
+            if(data.length > 0){
                 req.session.user = {
-                    id: req.query.id,
+                    id: data[0].id,
+                    seq: data[0].seq,
                     authorized: true
                 };
             } else {
@@ -61,7 +60,7 @@ exports.register = (req, res, next) => {
         id : req.query.id,
         password : req.query.password
     };
-    var sql = "INSERT INTO member SET seq = (select nextval('member')), ?";
+    var sql = "INSERT INTO member SET seq = (select yoon.nextval('member')), ?";
     global.dbPool.queryParam(sql, memberObj, function(err, data){
         if (err) console.log(err);
         else res.send(data);
@@ -69,7 +68,7 @@ exports.register = (req, res, next) => {
 }
 
 exports.list = (req, res, next) => {
-    var sql = 'SELECT * FROM member';    
+    var sql = 'SELECT seq, id FROM member';    
     global.dbPool.query(sql, function(err, data){
         if (err) console.log(err);
         else res.send(data);
