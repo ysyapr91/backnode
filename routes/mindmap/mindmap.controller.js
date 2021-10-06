@@ -10,10 +10,6 @@ exports.login = (req, res, next) => {
     memberCtr.login(req, res, next);
 }
 
-exports.memberlist = (req, res, next) => {
-    memberCtr.list(req, res, next);
-}
-
 exports.list = (req, res, next) => {
     var sql = 'SELECT map_seq, mem_seq, p_map, title, value FROM mindmap';    
     global.dbPool.query(sql, function(err, data){

@@ -1,5 +1,6 @@
 exports.main = (req, res, next) => {
     console.log('main');
+    res.send({ title: 'main'});
 }
 
 exports.error = (req, res, next) => {
