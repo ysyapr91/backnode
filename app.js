@@ -14,6 +14,10 @@ app.use(expressSession({
 
 global.dbPool = require('./config/db_connect.js');
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    next();
+});
 app.use('/', routes);
 
 const port = 8081;
