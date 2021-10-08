@@ -1,9 +1,15 @@
-var createError = require('http-errors');
+const createError = require('http-errors');
 const express = require('express');
+const expressErrorHandler = require('express-error-handler');
 const app = express();
 const routes = require('./routes');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
+const cors = require('cors')
+
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
 app.use(cookieParser());
 app.use(expressSession({
@@ -14,10 +20,8 @@ app.use(expressSession({
 
 global.dbPool = require('./config/db_connect.js');
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-    next();
-});
+app.use(cors())
+
 app.use('/', routes);
 
 const port = 8081;

@@ -12,10 +12,15 @@ exports.login = (req, res, next) => {
 
 exports.list = (req, res, next) => {
     var sql = 'SELECT map_seq, mem_seq, p_map, title, value FROM mindmap';    
-    global.dbPool.query(sql, function(err, data){
-        if (err) console.log(err);
-        else res.send(data);
-    });
+    try {
+        global.dbPool.query(sql, function(err, data){
+            if (err) console.log(err);
+            else res.send(data);
+        });
+    } catch {
+        console.log(req.url + ' err');
+        res.json({ error: 'error'});
+    }
 }
 
 exports.register = (req, res, next) => {
@@ -28,10 +33,15 @@ exports.register = (req, res, next) => {
     if (req.session.user) mindmapObj.mem_seq = req.session.user.seq;
     
     var sql = "INSERT INTO mindmap SET map_seq = (select yoon.nextval('mindmap')), ?";
-    global.dbPool.queryParam(sql, mindmapObj, function(err, data){
-        if (err) console.log(err);
-        else res.send(data);
-    });
+    try {
+        global.dbPool.queryParam(sql, mindmapObj, function(err, data){
+            if (err) console.log(err);
+            else res.send(data);
+        });
+    } catch {
+        console.log(req.url + ' err');
+        res.json({ error: 'error'});
+    }
 }
 
 exports.delete = (req, res, next) => {

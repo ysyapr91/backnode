@@ -13,25 +13,38 @@ module.exports = function () {
 
     return {
         getConnection: function (callback) {
-            pool.getConnection(callback);
+            try{
+                pool.getConnection(callback);
+            } catch (e) {
+                console.log('db_connect getConnection ERROR : ' + e);
+            }
         },
         query: function (sql, callback){
-            pool.getConnection(function(err, con){
-                con.query(sql, function (err, result, fields) {
-                    con.release();
-                    if (err) return callback(err);
-                    callback(null, result);
+            try{
+                pool.getConnection(function(err, con){
+                    con.query(sql, function (err, result, fields) {
+                        con.release();
+                        if (err) return callback(err);
+                        callback(null, result);
+                    });
                 });
-             });
+            } catch (e) {
+                console.log('db_connect query ERROR : ' + e);
+            }
         },
         queryParam: function (sql, param, callback){
-            pool.getConnection(function(err, con){
-                con.query(sql, param, function (err, result, fields) {
-                    con.release();
-                    if (err) return callback(err);
-                    callback(null, result);
+            try{
+                pool.getConnection(function(err, con){
+                    con.query(sql, param, function (err, result, fields) {
+                        con.release();
+                        if (err) return callback(err);
+                        callback(null, result);
+                    });
                 });
-             });
+            } catch (e) {
+                console.log('db_connect queryParam ERROR : ' + e);
+            }
+            
         },
         end: function(callback){
             pool.end(callback);

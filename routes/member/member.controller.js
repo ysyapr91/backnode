@@ -24,54 +24,74 @@ exports.check = (req, res, next) => {
 }
 
 exports.login = (req, res, next) => {
-    var memberObj = [req.query.id, req.query.password];
+    var memberObj = [req.body.id, req.body.password];
     var sql = "SELECT seq,id FROM member WHERE id=? AND password=?";
-    global.dbPool.queryParam(sql, memberObj, function(err, data){
-        if (err) {
-            console.log(err);
-            res.send({msg:'login fail'});
-        } else {
-            if(data.length > 0){
-                req.session.user = {
-                    id: data[0].id,
-                    seq: data[0].seq,
-                    authorized: true
-                };
+    try {
+        global.dbPool.queryParam(sql, memberObj, function(err, data){
+            if (err) {
+                res.send({msg: 'login fail', err: err});
             } else {
-               res.send({msg:'login fail'});
-            }
-            res.send(data);
-        };
-    });
+                if(data.length > 0){
+                    req.session.user = {
+                        id: data[0].id,
+                        seq: data[0].seq,
+                        authorized: true
+                    };
+                    msg = 'login success';
+                } else {
+                    msg = 'login fail';
+                }
+                res.send({data:data[0], msg: msg});
+            };
+        });
+    } catch (e) {
+        console.log(req.url + ' : ' + e);
+        res.send({ error: 'error'});
+    }
 }
 
 exports.logout = (req, res, next) => {
-    if (req.session.user) {
-        req.session.destroy(function(err){
-            if(err) throw err;
-            res.send({msg:'logout done'});
-        });
-    } else {
-        res.send({msg:'go login'});
+    try {
+        if (req.session.user) {
+            req.session.destroy(function(err){
+                if(err) throw err;
+                res.send({msg:'logout done'});
+            });
+        } else {
+            res.send({msg:'go login'});
+        }
+    } catch {
+        console.log(req.url + ' err');
+        res.json({ error: 'error'});
     }
 }
 
 exports.register = (req, res, next) => {
     var memberObj = {
-        id : req.query.id,
-        password : req.query.password
+        id : req.body.id,
+        password : req.body.password
     };
     var sql = "INSERT INTO member SET seq = (select yoon.nextval('member')), ?";
-    global.dbPool.queryParam(sql, memberObj, function(err, data){
-        if (err) console.log(err);
-        else res.send(data);
-    });
+    try {
+        global.dbPool.queryParam(sql, memberObj, function(err, data){
+            if (err) console.log(err);
+            else res.send({data: data, msg: ''});
+        });
+    } catch {
+        console.log(req.url + ' err');
+        res.json({ error: 'error'});
+    }
 }
 
 exports.list = (req, res, next) => {
     var sql = 'SELECT seq, id FROM member';    
-    global.dbPool.query(sql, function(err, data){
-        if (err) console.log(err);
-        else res.send(data);
-    });
+    try {
+        global.dbPool.query(sql, function(err, data){
+            if (err) console.log(err);
+            else res.send(data);
+        });
+    } catch {
+        console.log(req.url + ' err');
+        res.json({ error: 'error'});
+    }
 }
