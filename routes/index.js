@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const common = require('./common/index');
 const main = require('./main/index');
 const member = require('./member/index');
 const mindmap = require('./mindmap/index');

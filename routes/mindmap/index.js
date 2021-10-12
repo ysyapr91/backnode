@@ -4,9 +4,7 @@ const ctr = require('./mindmap.controller');
 
 /* GET home page. */
 router.get('/', ctr.main);
-router.get('/login', ctr.login);
 router.get('/list', ctr.list);
-router.get('/register', ctr.register);
-router.get('/delete', ctr.delete);
+router.post('/register', ctr.register);
 
 module.exports = router;
