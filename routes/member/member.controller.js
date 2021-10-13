@@ -36,16 +36,16 @@ exports.login = (req, res, next) => {
             common.error(req, res, err);
         } else {
             if(data.length > 0){
-                req.session.user = {
+                var userData = {
                     id: data[0].id,
                     seq: data[0].seq,
                     authorized: true
                 };
-                msg = 'login success';
+                common.returnData(res, userData, 'login success', 0);
             } else {
-                msg = 'login fail';
+                common.returnData(res, {}, 'login fail', 9);
             }
-            common.returnData(res, data[0], msg);
+            
         };
     });
 }
@@ -60,10 +60,6 @@ exports.logout = (req, res, next) => {
     } else {
         common.returnData(res, {}, 'not login');
     }
-}
-
-exports.myInfo = (req, res, next) => {
-    console.log(req.session.user);
 }
 
 exports.list = (req, res, next) => {
