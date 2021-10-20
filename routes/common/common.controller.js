@@ -5,9 +5,12 @@ exports.error = (req, res, err) => {
 
 //common return data
 exports.returnData = (res, data, msg, code) => {
-    console.log('code : [' + code + '] / msg : [' + msg + '] / data : [' + JSON.stringify(data) + ']');
+    var date = new Date();
+    
+    console.log('[' + date.toLocaleString() + '] code : [' + code + '] / msg : [' + msg + '] / data : [' + JSON.stringify(data) + ']');
     if(!code) code = 0;
     if(!msg) msg = '';
+    
     res.send({code: code, msg: msg, data: data});
 }
 

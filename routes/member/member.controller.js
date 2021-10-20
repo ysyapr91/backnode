@@ -20,7 +20,6 @@ exports.register = (req, res, next) => {
 }
 
 exports.check = (req, res, next) => {
-    console.log(req.session.user);
     if (req.session.user) {
         next();
     } else {
@@ -51,7 +50,6 @@ exports.login = (req, res, next) => {
 }
 
 exports.logout = (req, res, next) => {
-    console.log(req.session.user);
     if (req.session.user) {
         req.session.destroy(function(err){
             if(err) throw err;
